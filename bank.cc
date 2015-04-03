@@ -8,12 +8,17 @@ Bank::Bank( unsigned int numStudents ) {
     }
 }
 
+Bank::~Bank(){
+    delete [] waitCond;
+}
+
 void Bank::main() {
 
 }
 
 void Bank::deposit( unsigned int id, unsigned int amount ) {
     balances.at(id)+= amount;
+    waitCond[id].signal();
 }
 
 void Bank::withdraw( unsigned int id, unsigned int amount ) {
