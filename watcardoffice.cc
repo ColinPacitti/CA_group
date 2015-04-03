@@ -1,5 +1,7 @@
 #include "watcardoffice.h"
 
+extern MPRNG rand_gen;//!!! TODO: declare on driver
+
 WATCardOffice::WATCardOffice(Printer &prt,Bank &bank,unsigned int numCouriers)
   :prt(prt),bank(bank),numCouriers(numCouriers),requests(NULL),deleteflag(false)
 {
@@ -43,10 +45,40 @@ Job* WATCardOffice::requestWork(){
 
 void WATCardOffice::Courier::main(){
   while(true){
+    //each courier task calls requestWork, blocks until a job request is ready
+    //and then receives the next job request as the result of the call
     Job* thejob=requestWork();
     if(thejob==NULL) break;//break condition
     
+    //as soon as the request is satisfied, the courier updates the student's WATCard
+    //there is a 1 in 6 chance a courier loses a student's WatCard
+    unsigned int lostChance=rand_gen(5);
+    if(lostChance==0){
+      WATCard& thecard=thejob->args.mycard;
+      if(thecard!=NULL) delete thecard;//drop it
+      thejob->result.exception(new Lost);
+    }
     
+    //or i do not drop it
+    else{
+      //obtain parameters
+      Bank& thebank=thejob->args.mybank;
+      unsigned int theid=thejob->args.sid;
+      unsigned int theamount=thejob->args.myamount;
+      WATCard* thecard=thejob->args.mycard;
+      
+      //withdraw from bank
+      thebank.withdraw(theid,theamount);
+      
+      //add to watcard
+      thecard.deposit(theamount);
+      
+      //tell future i done it
+      thejob->result.delivery(&(thecard));
+    }
+    
+    //clean up
+    delete thejob;
   }
 }
 

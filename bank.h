@@ -4,7 +4,6 @@
 _Monitor Bank {
     vector<int> balances;
     uCondition *waitCond;
-    void main();
     public:
         Bank( unsigned int  numStudents);
         void deposit( unsigned int id, unsigned int amount );

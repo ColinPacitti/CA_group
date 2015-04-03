@@ -13,7 +13,7 @@ _Task WATCardOffice {
   struct Args{
     unsigned int sid;
     unsigned int myamount;
-    WATCard* mycard;
+    WATCard& mycard;
     Bank& mybank;
     //constructor
   Args(unsigned int sid,unsigned int myamount, WATCard* mycard,Bank& mybank)
