@@ -12,10 +12,6 @@ Bank::~Bank(){
     delete [] waitCond;
 }
 
-void Bank::main() {
-
-}
-
 void Bank::deposit( unsigned int id, unsigned int amount ) {
     balances.at(id)+= amount;
     waitCond[id].signal();
