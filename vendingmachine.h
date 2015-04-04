@@ -1,3 +1,6 @@
+#ifndef __VENDINGMACHINE_H__
+#define __VENDINGMACHINE_H__
+
 #include "nameserver.h"
 #include "printer.h"
 #include "watcard.h"
@@ -24,3 +27,4 @@ _Task VendingMachine {
         Nomutex unsigned int cost();
         Nomutex unsigned int getId();
 };
+#endif
