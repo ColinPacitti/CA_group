@@ -1,14 +1,25 @@
-CXX = u++
-CXXFLAGS = -g -Wall -Wno-unused-label -MD
-OBJECTS = printer.o bank.o config.o watcard.o nameserver.o parent.o soda.o truck.o vendingmachine.o watcardoffice.o bottlingplant.o truck.o # object files forming first executable with prefix ``q2''
-DEPENDS = ${OBJECTS:.o=.d}
-EXECS = bottlingplant
-MAKEFLAGS = --no-print-directory
+OPT:=
 
-${EXECS} : ${OBJECTS}
-	${CXX} $^ -o $@
+CXX = u++                                       # compiler
+CXXFLAGS = -g -multi -Wall -Wno-unused-label -MMD ${OPT} # compiler flags
+MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}   # makefile name
 
-clean :
-	rm -f ${DEPENDS} ${OBJECTS} ${EXECS}
+OBJECTS = bank.o bottlingplant.o config.o main.o mprng.o nameserver.o office.o parent.o printer.o student.o truck.o vendingmachine.o watcard.o
+DEPENDS = ${OBJECTS:.o=.d}                      # substitute ".o" with ".d"
+EXEC = soda
 
--include ${DEPENDS}
+#############################################################
+.PHONY : all clean
+
+all : ${EXEC}                                   # build all executables
+
+${EXEC} : ${OBJECTS}
+    ${CXX} ${CXXFLAGS} $^ -o $@
+
+#############################################################
+${OBJECTS} : ${MAKEFILE_NAME}                   # OPTIONAL : changes to this file => recompile
+
+-include ${DEPENDS}                             # include *.d files containing program dependences
+
+clean :                                         # remove files that can be regenerated
+    rm -f *.d *.o ${EXECS} ImplType
