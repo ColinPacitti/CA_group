@@ -16,16 +16,19 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
     nameServer->VMregister( this );    
 }
 
-void VendingMachine::buy( Flavours flavour, WATCard &card ){
+void VendingMachine::main(){
     for(;;){
-        if( noBuy ) {
-            _Accept( restocked ){
-                noBuy = false;
-                break;
-            } or _Accept( cost, getId, inventory, ~VendingMachine ){};
+        _Accept( ~VendingMachine ){
+            break;
+        } or _When(noBuy) _Accept( cost, getId, inventory, restocked ){
+
+        } or _When(!noBuy) _Accept(buy, inventory, cost, getId){
+        
         }
     }
+}
 
+void VendingMachine::buy( Flavours flavour, WATCard &card ){
     int balance = card.getBalance();
     int *allStock = inventory();
     int stock - allStock[flavour];    
@@ -34,7 +37,7 @@ void VendingMachine::buy( Flavours flavour, WATCard &card ){
     if( balance < sodaCost ) {
         throw Funds;
     } else if( stock == 0 ) {
-        throw Stock
+        throw Stock;
     } else {
         card.withdraw( sodaCost );
     } 
@@ -46,7 +49,7 @@ unsigned int* VendingMachine::inventory(){
 }
 
 void VendingMachine::restocked(){
-    //Used to indicate stocking is finished
+    noBuy = false;
 }
 
 unsigned int VendingMachine::cost() {
