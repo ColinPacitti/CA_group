@@ -5,6 +5,8 @@
 #include "vendingmachine.h"
 #include <vector>
 
+_Task VendingMachine;
+
 _Task NameServer {
     void main();
     //pass in
