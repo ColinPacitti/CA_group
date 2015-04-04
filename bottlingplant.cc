@@ -1,4 +1,4 @@
-#include "bottlingplant"
+#include "bottlingplant.h"
 using namespace std;
 
 extern MPRNG rand_gen;

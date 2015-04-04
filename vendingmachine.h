@@ -6,6 +6,9 @@
 #include "watcard.h"
 #include "config.h"
 
+_Task Printer;
+_Task BottlingPlant;
+
 _Task VendingMachine {
     int stocks [4];
     bool noBuy;
@@ -17,14 +20,14 @@ _Task VendingMachine {
     void main();
     public:
         enum Flavours { CHERRY, LIME }; // flavours of soda (YOU DEFINE)
-        Event Funds {}; // insufficient funds
-        Event Stock {}; // out of stock for particular flavour
+        _Event Funds {}; // insufficient funds
+        _Event Stock {}; // out of stock for particular flavour
         VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost,
                         unsigned int maxStockPerFlavour );
         void buy( Flavours flavour, WATCard &card );
         unsigned int *inventory();
         void restocked();
-        Nomutex unsigned int cost();
-        Nomutex unsigned int getId();
+        _Nomutex unsigned int cost();
+        _Nomutex unsigned int getId();
 };
 #endif
