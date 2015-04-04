@@ -19,7 +19,13 @@ void Truck::main(){
         VendingMachine **list = nameServer->getMachineList();
         int rand = rand_gen(1, 10);
         yield(rand);
-        bool status = plant->getShipment( stock );
+
+        try {
+            bool status = plant->getShipment( stock );
+        } catch ( BottlingPlant::Shutdown e ) {
+            returnl
+        }
+
         if ( status == 1 ) {
             return;
         }       
