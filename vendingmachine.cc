@@ -8,6 +8,7 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
     id = id;
     sodaCost = sodaCost;
     maxStockPerFlavour = maxStockPerFlavour;
+    noBuy = false;
     for( int i = 0; i < 2; i++ ) {
         stocks[i] = 0;
     }

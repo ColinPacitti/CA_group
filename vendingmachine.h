@@ -3,6 +3,7 @@
 
 _Task VendingMachine {
     int stocks [2];
+    bool noBuy;
     Printer *print;
     NameServer *nameServer;
     unsigned int id;
