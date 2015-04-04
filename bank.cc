@@ -1,9 +1,9 @@
 #include "bank.h"
-using namepspace std;
+using namespace std;
 
 Bank::Bank( unsigned int numStudents ) {
     waitCond = new uCondition[numStudents];
-    for( int i = 0; i < numStudents; i++ ) {
+    for( unsigned int i = 0; i < numStudents; i++ ) {
         balances.push_back(0);
     }
 }
