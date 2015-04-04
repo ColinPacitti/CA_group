@@ -1,8 +1,10 @@
 #include "nameserver.h"
 #include "printer.h"
+#include "watcard.h"
+#include "config.h"
 
 _Task VendingMachine {
-    int stocks [2];
+    int stocks [4];
     bool noBuy;
     Printer *print;
     NameServer *nameServer;
