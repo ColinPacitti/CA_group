@@ -14,7 +14,7 @@ EXEC = soda
 all : ${EXEC}                                   # build all executables
 
 ${EXEC} : ${OBJECTS}
-    ${CXX} ${CXXFLAGS} $^ -o $@
+${CXX} ${CXXFLAGS} $^ -o $@
 
 #############################################################
 ${OBJECTS} : ${MAKEFILE_NAME}                   # OPTIONAL : changes to this file => recompile
