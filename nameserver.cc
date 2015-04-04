@@ -1,5 +1,7 @@
 #include "nameserver.h"
 #include <assert.h>
+#include "vendingmachine.h"
+
 NameServer::NameServer( Printer &prt, unsigned int numVendingMachines, unsigned int numStudents )
   :prt(prt),numVendingMachine(numVendingMachine),numStudents(numStudents),matchNext(numVendingMachines-1)
 {}

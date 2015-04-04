@@ -2,7 +2,6 @@
 #define __NAMESERVER_H__
 
 #include "printer.h"
-#include "vendingmachine.h"
 #include <vector>
 
 _Task VendingMachine;
