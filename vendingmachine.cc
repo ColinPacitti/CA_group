@@ -9,8 +9,8 @@ using namespace std;
 
 VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost,
                                 unsigned int maxStockPerFlavour ){
-    print = prt;
-    nameServer = nameServer;
+    print = &prt;
+    this->nameServer = &nameServer;
     id = id;
     sodaCost = sodaCost;
     maxStockPerFlavour = maxStockPerFlavour;
@@ -19,25 +19,25 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
         stocks[i] = 0;
     }
     //Register with nameServer
-    nameServer->VMregister( this );    
 }
 
 void VendingMachine::main(){
+    nameServer->VMregister( this );    
     for(;;){
         _Accept( ~VendingMachine ){
             break;
-        } or _When(noBuy) _Accept( cost, getId, inventory, restocked ){
+        } or _When(noBuy) _Accept( restocked ){
 
-        } or _When(!noBuy) _Accept(buy, inventory, cost, getId){
+        } or _When(!noBuy) _Accept(buy, inventory ){
         
         }
     }
 }
 
 void VendingMachine::buy( Flavours flavour, WATCard &card ){
-    int balance = card.getBalance();
-    int *allStock = inventory();
-    int stock - allStock[flavour];    
+    unsigned int balance = card.getBalance();
+    unsigned int *allStock = inventory();
+    unsigned int stock = allStock[flavour];    
     //Need Flag variable according to assingment??
     //Check to make sure stock and balance is okay
     if( balance < sodaCost ) {
@@ -51,7 +51,7 @@ void VendingMachine::buy( Flavours flavour, WATCard &card ){
 
 unsigned int* VendingMachine::inventory(){
     noBuy = true;
-    return &stocks; 
+    return stocks; 
 }
 
 void VendingMachine::restocked(){

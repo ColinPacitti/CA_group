@@ -1,3 +1,5 @@
+#ifndef __TRUCK_H__
+#define __TRUCK_H__
 //#include "printer.h"
 //#include "nameserver.h"
 //#include "bottlingplant.h"
@@ -18,3 +20,4 @@ public:
     Truck( Printer &prt, NameServer &nameServer, BottlingPlant &plant,
     unsigned int numVendingMachines, unsigned int maxStockPerFlavour );
 };
+#endif

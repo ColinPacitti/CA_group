@@ -12,7 +12,7 @@ _Task NameServer;
 class WATCard;
 
 _Task VendingMachine {
-    int stocks [5];
+    unsigned int stocks [5];
     bool noBuy;
     Printer *print;
     NameServer *nameServer;
