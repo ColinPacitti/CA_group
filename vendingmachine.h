@@ -12,7 +12,7 @@ _Task NameServer;
 class WATCard;
 
 _Task VendingMachine {
-    int stocks [4];
+    int stocks [5];
     bool noBuy;
     Printer *print;
     NameServer *nameServer;
@@ -21,7 +21,7 @@ _Task VendingMachine {
     unsigned int maxStockPerFlavour;
     void main();
     public:
-        enum Flavours { CHERRY, LIME }; // flavours of soda (YOU DEFINE)
+        enum Flavours { BLUES, CREAM, ROOT, LIME }; // flavours of soda (YOU DEFINE)
         _Event Funds {}; // insufficient funds
         _Event Stock {}; // out of stock for particular flavour
         VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost,
