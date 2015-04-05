@@ -1,5 +1,11 @@
-#include "bank.h"
-#include "printer.h"
+#ifndef __PARENT_H__
+#define __PARENT_H__
+//#include "bank.h"
+//#include "printer.h"
+#include "MPRNG.h"
+
+_Monitor Bank;
+_Monitor Printer;
 
 _Task Parent {
     unsigned int numStudents;
@@ -10,3 +16,4 @@ _Task Parent {
     public:
         Parent( Printer &prt, Bank &bank, unsigned int numStudents, unsigned int parentalDelay );
 };
+#endif
