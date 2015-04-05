@@ -1,4 +1,9 @@
 #include "truck.h"
+#include "printer.h"
+#include "nameserver.h"
+#include "bottlingplant.h"
+#include "printer.h"
+
 using namespace std;
 extern MPRNG rand_gen;
 

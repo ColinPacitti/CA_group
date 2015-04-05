@@ -1,6 +1,10 @@
-#include "printer.h"
-#include "nameserver.h"
-#include "bottlingplant.h"
+//#include "printer.h"
+//#include "nameserver.h"
+//#include "bottlingplant.h"
+
+_Task BottlingPlant;
+_Task NameServer;
+_Monitor Printer;
 
 _Task Truck {
 void main();
