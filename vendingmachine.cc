@@ -41,9 +41,9 @@ void VendingMachine::buy( Flavours flavour, WATCard &card ){
     //Need Flag variable according to assingment??
     //Check to make sure stock and balance is okay
     if( balance < sodaCost ) {
-        throw Funds;
+        throw Funds();
     } else if( stock == 0 ) {
-        throw Stock;
+        throw Stock();
     } else {
         card.withdraw( sodaCost );
     } 
