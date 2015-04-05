@@ -1,10 +1,11 @@
 #ifndef __NAMESERVER_H__
 #define __NAMESERVER_H__
 
-#include "printer.h"
+//#include "printer.h"
 #include <vector>
 
 _Task VendingMachine;
+_Monitor Printer;
 
 _Task NameServer {
     void main();

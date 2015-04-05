@@ -1,4 +1,10 @@
 #include "vendingmachine.h"
+
+#include "nameserver.h"
+#include "printer.h"
+#include "watcard.h"
+//#include "config.h"
+
 using namespace std;
 
 VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost,
