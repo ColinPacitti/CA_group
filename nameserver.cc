@@ -1,10 +1,11 @@
 #include "nameserver.h"
 #include <assert.h>
 #include "vendingmachine.h"
+#include "printer.h"
 using namespace std;
 
 NameServer::NameServer( Printer &prt, unsigned int numVendingMachines, unsigned int numStudents )
-  :prt(prt),numVendingMachine(numVendingMachine),numStudents(numStudents),matchNext(numVendingMachines-1)
+  :prt(prt),numVendingMachines(numVendingMachines),numStudents(numStudents),matchNext(numVendingMachines-1)
 {}
 
 void NameServer::VMregister(VendingMachine* vendingmachine){

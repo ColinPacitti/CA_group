@@ -1,13 +1,15 @@
 #ifndef __VENDINGMACHINE_H__
 #define __VENDINGMACHINE_H__
 
-#include "nameserver.h"
-#include "printer.h"
-#include "watcard.h"
+//#include "nameserver.h"
+//#include "printer.h"
+//#include "watcard.h"
 #include "config.h"
 
-_Task Printer;
+_Monitor Printer;
 _Task BottlingPlant;
+_Task NameServer;
+class WATCard;
 
 _Task VendingMachine {
     int stocks [4];

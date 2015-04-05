@@ -1,7 +1,6 @@
-#ifndef __A6PRINTER_H__
-#define __A6PRINTER_H__
+#ifndef __PRINTER_H__
+#define __PRINTER_H__
 
-#include <uC++.h>
 
 _Monitor Printer {
   private:

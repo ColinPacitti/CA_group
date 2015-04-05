@@ -20,7 +20,7 @@ void BottlingPlant::getShipment(unsigned int cargo[]){
   //the truck calls getShipment to obtain a shipment from the plant
   //and the shipment is copied into the cargo array passed by the truck
   if(shutdown){
-    throw Shutdown;
+    throw Shutdown();
   }
   
   for(unsigned int i=0;i<4;i++){
@@ -34,9 +34,9 @@ void BottlingPlant::main(){
   //MaxShippedPerFlavour is the maximum number of bottles of each flavour generated during production
   mytruck=new Truck(prt,nameServer,*this,numVendingMachines,maxStockPerFlavour);
   
-  for(unsigned int i=0;i<maxShippedFlavour;i++){
-    mynumber=(rand_gen(maxShippedFlavour))
-      stock[i]=mynumber;
+  for(unsigned int i=0;i<maxShippedPerFlavour;i++){
+    unsigned int mynumber=(rand_gen(maxShippedPerFlavour));
+    stock[i]=mynumber;
     totalcount+=mynumber;
   }
   
@@ -48,8 +48,8 @@ void BottlingPlant::main(){
     }
     or _Accept(getShipment){
       yield(timeBetweenShipments);
-      for(unsigned int i=0;i<maxShippedFlavour;i++){
-	mynumber=(rand_gen(maxShippedFlavour))
+      for(unsigned int i=0;i<maxShippedPerFlavour;i++){
+	unsigned int mynumber=(rand_gen(maxShippedPerFlavour));
 	stock[i]=mynumber;
 	totalcount+=mynumber;
       }
