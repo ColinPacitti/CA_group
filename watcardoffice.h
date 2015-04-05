@@ -2,18 +2,20 @@
 #define __WATCARDOFFICE_H__
 
 #include "watcard.h"
-#include "bank.h"
-#include "printer.h"
+//#include "bank.h"
+//#include "printer.h"
 #include <vector>
 
+//class WATCard;
+_Monitor Bank;
+_Monitor Printer;
+
 _Task WATCardOffice {
-
-
   //store info in Job
   struct Args{
     unsigned int sid;
     unsigned int myamount;
-    WATCard& mycard;
+    WATCard* mycard;
     Bank& mybank;
     //constructor
   Args(unsigned int sid,unsigned int myamount, WATCard* mycard,Bank& mybank)
@@ -38,7 +40,8 @@ _Task WATCardOffice {
     Printer& prt;
   public:
     Courier(unsigned int id,WATCardOffice* myoffice,Printer& prt)
-      :id(id),myoffice(myoffice),prt(prt);
+      :id(id),myoffice(myoffice),prt(prt)
+      {}
   };                 // communicates with bank
   
 

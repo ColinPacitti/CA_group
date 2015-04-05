@@ -1,5 +1,9 @@
 #include "watcardoffice.h"
 
+//#include "watcard.h"
+#include "bank.h"
+#include "printer.h"
+
 extern MPRNG rand_gen;//!!! TODO: declare on driver
 
 WATCardOffice::WATCardOffice(Printer &prt,Bank &bank,unsigned int numCouriers)
@@ -54,7 +58,7 @@ void WATCardOffice::Courier::main(){
     //there is a 1 in 6 chance a courier loses a student's WatCard
     unsigned int lostChance=rand_gen(5);
     if(lostChance==0){
-      WATCard& thecard=thejob->args.mycard;
+      WATCard* thecard=thejob->args.mycard;
       if(thecard!=NULL) delete thecard;//drop it
       thejob->result.exception(new Lost);
     }
@@ -71,10 +75,10 @@ void WATCardOffice::Courier::main(){
       thebank.withdraw(theid,theamount);
       
       //add to watcard
-      thecard.deposit(theamount);
+      thecard->deposit(theamount);
       
       //tell future i done it
-      thejob->result.delivery(&(thecard));
+      thejob->result.delivery(thecard);
     }
     
     //clean up
