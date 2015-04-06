@@ -35,7 +35,7 @@ void Truck::main(){
 	        for (unsigned int i=0;i<4;i++){
 	            shipcount+=stock[i];
 	        }
-	        prt.print(Printer::Truck,'P',shipcount);
+	        print->print(Printer::Truck,'P',shipcount);
         } catch ( BottlingPlant::Shutdown e ) {
             return;
         }
@@ -54,8 +54,8 @@ void Truck::main(){
            }
 	       print->print(Printer::Vending, 'U', id, notFilled);
            list[i]->restocked();
-	       prt.print(Printer::Truck,'D', id, shipcount);
+	       print->print(Printer::Truck,'D', id, shipcount);
         }
     }
-    prt.print(Printer::Truck,'F');
+    print->print(Printer::Truck,'F');
 }

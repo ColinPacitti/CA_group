@@ -41,7 +41,7 @@ void Student::main(){
 	_Enable{//cross stack
 	  mymachine->buy(myFlavour,*(mycard()));
 	  //if no exception
-	  prt.print(Printer::Student,id,'B',machine->getId());
+	  prt.print(Printer::Student,id,'B',mymachine->getId());
 	  repeat=false;//i just bought it
 	}
       }
@@ -59,7 +59,7 @@ void Student::main(){
       //if the vending machine is out of flavour, the student obtain a new vending machine
       catch(VendingMachine::Stock e){
 	mymachine=nameServer.getMachine(id);
-	prt.print(Printer::Student,id,'V',machine->getId());
+	prt.print(Printer::Student,id,'V',mymachine->getId());
       }
     }
     
