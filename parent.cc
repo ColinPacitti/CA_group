@@ -10,6 +10,7 @@ Parent::Parent( Printer &prt, Bank &bank, unsigned int numStudents, unsigned int
     this->bank = &bank;
     numStudents = numStudents;
     parentalDelay = parentalDelay;
+    prt.print(Printer::Parent,'S');
 }
 
 void Parent::main() {
@@ -20,6 +21,7 @@ void Parent::main() {
             yield(parentalDelay);
             int amount = rand_gen(1);
             int id = rand_gen(numStudents);
+	    prt.print(Printer::Parent,'D',id,amount);
             if ( amount == 0 ) {
                 bank->deposit( id, 1);
             } else {
@@ -27,4 +29,5 @@ void Parent::main() {
             }
         }
     }
+    prt.print(Printer::Parent,'F');
 }

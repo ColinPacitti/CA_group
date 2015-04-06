@@ -17,6 +17,7 @@ WATCardOffice::WATCardOffice(Printer &prt,Bank &bank,unsigned int numCouriers)
   for(unsigned int i=0;i<numCouriers;i++){
     courierPool[i]=new Courier(i,this,prt);
   }
+  prt.print(Printer::WATCardOffice,'S');
 }
 
 WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount){
@@ -26,6 +27,7 @@ WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount){
   Job* myjob=new Job(Args(sid,amount,NULL,bank));
   requests.push_back(myjob);
   //waitChan.signalBlock();//??? question, is this right, down there is same one
+  prt.print(Printer::WATCardOffice,'C',sid,amount);
   return myjob->result;
 }
 
@@ -36,6 +38,7 @@ WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount
   Job* myjob=new Job(Args(sid,amount,card,bank));
   requests.push_back(myjob);
   //waitChan.signalBlock();
+  prt.print(Printer::WATCardOffice,'T',sid,amount);
   return myjob->result;
 }
 
@@ -45,7 +48,6 @@ WATCardOffice::Job* WATCardOffice::requestWork(){
   if(deleteflag){
     return NULL;//end the task now
   }
-  
   //waitChan.wait();
   
   //return the head job and remove it from vector
@@ -55,6 +57,7 @@ WATCardOffice::Job* WATCardOffice::requestWork(){
 }
 
 void WATCardOffice::main(){
+  
   while(true){
     _Accept(~WATCardOffice){
       deleteflag=true;
@@ -70,6 +73,7 @@ void WATCardOffice::main(){
 }
 
 void WATCardOffice::Courier::main(){
+  prt.print(Printer::Courier,id,'S');
   while(true){
     //each courier task calls requestWork, blocks until a job request is ready
     //and then receives the next job request as the result of the call
@@ -87,11 +91,14 @@ void WATCardOffice::Courier::main(){
     
     //or i do not drop it
     else{
+      
       //obtain parameters
       Bank& thebank=thejob->args.mybank;
       unsigned int theid=thejob->args.sid;
       unsigned int theamount=thejob->args.myamount;
       WATCard* thecard=thejob->args.mycard;
+      
+      prt.print(Printer::Courier,id,'t',theid,theamount);
       
       //withdraw from bank
       thebank.withdraw(theid,theamount);
@@ -101,11 +108,14 @@ void WATCardOffice::Courier::main(){
       
       //tell future i done it
       thejob->result.delivery(thecard);
+      
+      prt.print(Printer::Courier,id,'T',theid,theamount);
     }
     
     //clean up
     delete thejob;
   }
+  prt.print(Printer::Courier,id,'F');
 }
 
 WATCardOffice::~WATCardOffice(){
@@ -113,5 +123,6 @@ WATCardOffice::~WATCardOffice(){
     delete courierPool[i];
   }
   delete[] courierPool;
+  prt.print(Printer::WATCardOffice,'F');
 }
 

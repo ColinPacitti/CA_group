@@ -18,6 +18,7 @@ Truck::Truck( Printer &prt, NameServer &nameServer, BottlingPlant &plant,
     for( int i = 0; i < 4; i++ ) {
         stock[i] = 0;
     }
+    prt.print(Printer::Truck,'S');
 }
 
 void Truck::main(){
@@ -28,6 +29,12 @@ void Truck::main(){
 
         try {
             plant->getShipment( stock );
+	    //if do not throw, i get the shipment
+	    unsigned int shipcount;
+	    for (unsigned int i=0;i<4;i++){
+	      shipcount+=stock[i];
+	    }
+	    prt.print(Printer::Truck,'P',shipcount);
         } catch ( BottlingPlant::Shutdown e ) {
             return;
         }
@@ -44,7 +51,10 @@ void Truck::main(){
                 inventory[i]+= fill;
                 stock[i]-=fill;
            }
+	   
            list[i]->restocked();
+	   //prt.print(Printer::Truck,'D',);
         }
     }
+    prt.print(Printer::Truck,'F');
 }

@@ -17,6 +17,7 @@ NameServer::~NameServer(){
 
 void NameServer::VMregister(VendingMachine* vendingmachine){
   //machines.push_back(vendingmachine);
+  prt.print(Printer::NameServer,'R',fillposition);
   machines[fillposition]=vendingmachine;
   fillposition++;
   assert(fillposition<=numVendingMachines+1);//exceed max amount
@@ -35,6 +36,7 @@ void NameServer::advance(){
 VendingMachine* NameServer::getMachine( unsigned int id ){
   advance();
   assert(matchNext<fillposition);//within position i filled
+  prt.print(Printer::NameServer,'N',id,matchNext);
   return machines[matchNext];
 }
 
@@ -43,6 +45,7 @@ VendingMachine** NameServer::getMachineList(){
 }
 
 void NameServer::main(){
+  prt.print(Printer::NameServer,'S');
   while(true){
     //mysize=machines.size();
     
@@ -53,4 +56,6 @@ void NameServer::main(){
     or _When(fillposition==(numVendingMachines)) _Accept(getMachineList);
     or _Accept(VMregister);
   }
+  
+  prt.print(Printer::NameServer,'F');
 }

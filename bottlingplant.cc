@@ -1,4 +1,5 @@
 #include "bottlingplant.h"
+#include "printer.h"
 using namespace std;
 
 extern MPRNG rand_gen;
@@ -8,7 +9,7 @@ BottlingPlant::BottlingPlant(Printer &prt,NameServer &nameServer,unsigned int nu
 			     unsigned int timeBetweenShipments )
   :prt(prt),nameServer(nameServer),numVendingMachines(numVendingMachines),
    maxShippedPerFlavour(maxShippedPerFlavour),maxStockPerFlavour(maxStockPerFlavour),
-   timeBetweenShipments(timeBetweenShipments)
+   timeBetweenShipments(timeBetweenShipments),totalcount(0)
 {
   //init stock space
   for(int i=0;i<4;i++){
@@ -23,6 +24,19 @@ void BottlingPlant::getShipment(unsigned int cargo[]){
     throw Shutdown();
   }
   
+  prt.print(Printer::BottlingPlant,'P');
+  
+  //production run
+  //??? consequence to move it here
+  for(unsigned int i=0;i<maxShippedPerFlavour;i++){
+    unsigned int mynumber=(rand_gen(maxShippedPerFlavour));
+    stock[i]=mynumber;
+    totalcount+=mynumber;
+  }
+  
+  prt.print(Printer::BottlingPlant,'G',totalcount);
+  
+  //ready to ship
   for(unsigned int i=0;i<4;i++){
     cargo[i]=stock[i];
     cargo[i]=0;
@@ -32,13 +46,16 @@ void BottlingPlant::getShipment(unsigned int cargo[]){
 void BottlingPlant::main(){
   //it begines by creating a truck, performing a production run
   //MaxShippedPerFlavour is the maximum number of bottles of each flavour generated during production
+  prt.print(Printer::BottlingPlant,'S');
   mytruck=new Truck(prt,nameServer,*this,numVendingMachines,maxStockPerFlavour);
   
+  /*
   for(unsigned int i=0;i<maxShippedPerFlavour;i++){
     unsigned int mynumber=(rand_gen(maxShippedPerFlavour));
     stock[i]=mynumber;
     totalcount+=mynumber;
   }
+  */
   
   while(true){
     //and waiting for the truck to pickup the production run
@@ -48,11 +65,14 @@ void BottlingPlant::main(){
     }
     or _Accept(getShipment){
       yield(timeBetweenShipments);
+      /*
       for(unsigned int i=0;i<maxShippedPerFlavour;i++){
 	unsigned int mynumber=(rand_gen(maxShippedPerFlavour));
 	stock[i]=mynumber;
 	totalcount+=mynumber;
       }
+      */
     }
   }
+  prt.print(Printer::BottlingPlant,'F');
 }
