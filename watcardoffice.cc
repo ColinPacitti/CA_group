@@ -19,19 +19,13 @@ WATCardOffice::WATCardOffice(Printer &prt,Bank &bank,unsigned int numCouriers)
   }
 }
 
-WATCardOffice::~WATCardOffice(){
-  for(unsigned int i=0;i<numCouriers;i++){
-    delete courierPool[i];
-  }
-  delete []courierPool;
-}
-
 WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount){
   //a student performs an asychronous call to create to create real WATCard with balance
   //COURIER: a future WATCard is returned and sufficient funds are subsequently obtained from bank
   //via a courier to satisfy the request
   Job* myjob=new Job(Args(sid,amount,NULL,bank));
   requests.push_back(myjob);
+  //waitChan.signalBlock();//??? question, is this right, down there is same one
   return myjob->result;
 }
 
@@ -41,6 +35,7 @@ WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount
   //COURIER: A future WATCard is returned and suffieient funds are obtain from bank via courier
   Job* myjob=new Job(Args(sid,amount,card,bank));
   requests.push_back(myjob);
+  //waitChan.signalBlock();
   return myjob->result;
 }
 
@@ -50,10 +45,28 @@ WATCardOffice::Job* WATCardOffice::requestWork(){
   if(deleteflag){
     return NULL;//end the task now
   }
+  
+  //waitChan.wait();
+  
   //return the head job and remove it from vector
-  Job* thejob=requests[0];//??? block at this position?
+  Job* thejob=requests[0];//get the job
   requests.erase(requests.begin());
   return thejob;
+}
+
+void WATCardOffice::main(){
+  while(true){
+    _Accept(~WATCardOffice){
+      deleteflag=true;
+      
+      for(unsigned int i=0;i<numCouriers;i++){
+	_Accept(requestWork);
+      }
+      
+    }
+    or _When(requests.size()==0) _Accept(create,transfer);
+    or _Accept(requestWork);
+  }
 }
 
 void WATCardOffice::Courier::main(){
@@ -94,3 +107,11 @@ void WATCardOffice::Courier::main(){
     delete thejob;
   }
 }
+
+WATCardOffice::~WATCardOffice(){
+  for(unsigned int i=0;i<numCouriers;i++){
+    delete courierPool[i];
+  }
+  delete[] courierPool;
+}
+

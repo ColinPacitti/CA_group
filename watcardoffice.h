@@ -57,6 +57,7 @@ _Task WATCardOffice {
   std::vector<Job*>requests;//server request vector
   bool deleteflag;//use to sync when destruct
   Courier** courierPool;
+  //uCondition waitChan;//let request queue up at here
   
   void main();
 
