@@ -27,33 +27,34 @@ void Truck::main(){
         int rand = rand_gen(1, 10);
         yield(rand);
 
+	    unsigned int shipcount;
+        unsigned int notFilled;
         try {
             plant->getShipment( stock );
-	    //if do not throw, i get the shipment
-	    unsigned int shipcount;
-	    for (unsigned int i=0;i<4;i++){
-	      shipcount+=stock[i];
-	    }
-	    prt.print(Printer::Truck,'P',shipcount);
+	        //if do not throw, i get the shipment
+	        for (unsigned int i=0;i<4;i++){
+	            shipcount+=stock[i];
+	        }
+	        prt.print(Printer::Truck,'P',shipcount);
         } catch ( BottlingPlant::Shutdown e ) {
             return;
         }
 
-        //if ( status == 1 ) {
-        //    return;
-        //}       
         for( unsigned int i = 0; i < numVendingMachines; i++ ) {
             unsigned int id = list[i]->getId();
             unsigned int *inventory = list[i]->inventory();
+            print->print(Printer::Vending, 'd', id, shipcount); 
            for( int j = 0; j < 4; j++ ) {
                 //Might need to add unstocked_sum or num_bottles
-                unsigned int fill = maxStockPerFlavour - inventory[i]; 
-                inventory[i]+= fill;
-                stock[i]-=fill;
+                unsigned int fill = maxStockPerFlavour - inventory[j]; 
+                inventory[j]+= fill;
+                stock[j]-=fill;
+                shipcount-=fill;
+                notFilled = stock[j] - fill;
            }
-	   
+	       print->print(Printer::Vending, 'U', id, notFilled);
            list[i]->restocked();
-	   //prt.print(Printer::Truck,'D',);
+	       prt.print(Printer::Truck,'D', id, shipcount);
         }
     }
     prt.print(Printer::Truck,'F');

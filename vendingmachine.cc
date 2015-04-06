@@ -22,9 +22,11 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
 }
 
 void VendingMachine::main(){
+    print->print(Printer::Vending, 'S', sodaCost);
     nameServer->VMregister( this );    
     for(;;){
-        _Accept( ~VendingMachine ){
+        _Accept( ~VendingMachine ){i
+            print->print(Printer::Vending, 'F');
             break;
         } or _When(noBuy) _Accept( restocked ){
 
@@ -38,6 +40,7 @@ void VendingMachine::buy( Flavours flavour, WATCard &card ){
     unsigned int balance = card.getBalance();
     unsigned int *allStock = inventory();
     unsigned int stock = allStock[flavour];    
+    print->print(Printer::Vending, 'B', (int)flavour, stock[flavour] - 1);
     //Need Flag variable according to assingment??
     //Check to make sure stock and balance is okay
     if( balance < sodaCost ) {
@@ -51,11 +54,13 @@ void VendingMachine::buy( Flavours flavour, WATCard &card ){
 
 unsigned int* VendingMachine::inventory(){
     noBuy = true;
+    print->print(Printer::Vending, 'r');
     return stocks; 
 }
 
 void VendingMachine::restocked(){
     noBuy = false;
+    print->print(Printer::Vending, 'R');
 }
 
 unsigned int VendingMachine::cost() {

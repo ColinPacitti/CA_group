@@ -21,7 +21,7 @@ void Parent::main() {
             yield(parentalDelay);
             int amount = rand_gen(1);
             int id = rand_gen(numStudents);
-	    prt.print(Printer::Parent,'D',id,amount);
+	    print->print(Printer::Parent,'D',id,amount);
             if ( amount == 0 ) {
                 bank->deposit( id, 1);
             } else {
@@ -29,5 +29,5 @@ void Parent::main() {
             }
         }
     }
-    prt.print(Printer::Parent,'F');
+    print->print(Printer::Parent,'F');
 }
