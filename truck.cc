@@ -5,6 +5,8 @@
 #include "printer.h"
 #include "vendingmachine.h"
 
+#include <iostream>
+
 using namespace std;
 extern MPRNG rand_gen;
 
@@ -37,7 +39,9 @@ void Truck::main(){
 	        }
 	        print->print(Printer::Truck,'P',shipcount);
         } catch ( BottlingPlant::Shutdown e ) {
-            return;
+	  cout<<"adsfadsfa"<<endl;
+	  print->print(Printer::Truck,'F');
+	  return;
         }
 
         for( unsigned int i = 0; i < numVendingMachines; i++ ) {
@@ -57,5 +61,5 @@ void Truck::main(){
 	       print->print(Printer::Truck,'D', id, shipcount);
         }
     }
-    print->print(Printer::Truck,'F');
+    
 }

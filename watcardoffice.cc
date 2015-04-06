@@ -68,7 +68,7 @@ void WATCardOffice::main(){
       
     }
     or _When(requests.size()==0) _Accept(create,transfer);
-    or _Accept(requestWork);
+    or _When(requests.size()>0) _Accept(requestWork);
   }
 }
 

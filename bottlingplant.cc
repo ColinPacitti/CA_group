@@ -1,5 +1,6 @@
 #include "bottlingplant.h"
 #include "printer.h"
+#include <iostream>
 using namespace std;
 
 extern MPRNG rand_gen;
@@ -9,17 +10,19 @@ BottlingPlant::BottlingPlant(Printer &prt,NameServer &nameServer,unsigned int nu
 			     unsigned int timeBetweenShipments )
   :prt(prt),nameServer(nameServer),numVendingMachines(numVendingMachines),
    maxShippedPerFlavour(maxShippedPerFlavour),maxStockPerFlavour(maxStockPerFlavour),
-   timeBetweenShipments(timeBetweenShipments),totalcount(0)
+   timeBetweenShipments(timeBetweenShipments),totalcount(0),shutdown(false)
 {
   //init stock space
   for(int i=0;i<4;i++){
     stock.push_back(0);
   }
+  cout<<"begin:"<<shutdown<<endl;
 }
 
 void BottlingPlant::getShipment(unsigned int cargo[]){
   //the truck calls getShipment to obtain a shipment from the plant
   //and the shipment is copied into the cargo array passed by the truck
+  cout<<"getship:"<<shutdown<<endl;
   if(shutdown){
     throw Shutdown();
   }
@@ -61,6 +64,8 @@ void BottlingPlant::main(){
     //and waiting for the truck to pickup the production run
     _Accept(~BottlingPlant){
       shutdown=true;
+      //uRendezvousAcceptor();
+      uBaseCoroutine* URendezvousAcceptor();
       _Accept(getShipment);
     }
     or _Accept(getShipment){
