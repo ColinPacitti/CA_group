@@ -16,15 +16,15 @@ BottlingPlant::BottlingPlant(Printer &prt,NameServer &nameServer,unsigned int nu
   for(int i=0;i<4;i++){
     stock.push_back(0);
   }
-  cout<<"begin:"<<shutdown<<endl;
+  //cout<<"begin:"<<shutdown<<endl;
 }
 
 void BottlingPlant::getShipment(unsigned int cargo[]){
   //the truck calls getShipment to obtain a shipment from the plant
   //and the shipment is copied into the cargo array passed by the truck
-  cout<<"getship:"<<shutdown<<endl;
   if(shutdown){
      uRendezvousAcceptor();
+     cout << "isi it even getting thrown!?" << endl;
     throw BottlingPlant::Shutdown();
   }
   
@@ -43,12 +43,12 @@ void BottlingPlant::getShipment(unsigned int cargo[]){
   //ready to ship
   for(unsigned int i=0;i<4;i++){
     cargo[i]=stock[i];
-    cargo[i]=0;
+    //cargo[i]=0;
   }
 }
 
 BottlingPlant::~BottlingPlant(){
-  cout<<"bottlingplant del"<<endl;
+  //cout<<"bottlingplant del"<<endl;
 }
 
 void BottlingPlant::main(){
@@ -68,10 +68,9 @@ void BottlingPlant::main(){
   while(true){
     //and waiting for the truck to pickup the production run
     _Accept(BottlingPlant::~BottlingPlant){
-      cout<<"booooooooo"<<endl;
+      cout << "does this happen!???" << endl;
       shutdown=true;
       _Accept(BottlingPlant::getShipment);
-      cout<<"lllllloooooo"<<endl;
       break;
     }
     or _Accept(BottlingPlant::getShipment){

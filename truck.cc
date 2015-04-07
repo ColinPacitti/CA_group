@@ -24,18 +24,17 @@ Truck::Truck( Printer &prt, NameServer &nameServer, BottlingPlant &plant,
 }
 
 Truck::~Truck(){
-  cout<<"truck des"<<endl;
+  cout << "whats your issure man" << endl;
 }
 
 void Truck::main(){
     for(;;) {
-      cout << "aaron dont leave me" << endl;
         VendingMachine **list = nameServer->getMachineList();
         int rand = rand_gen(1, 10);
         yield(rand);
 
-	unsigned int shipcount;
-	unsigned int notFilled;
+	unsigned int shipcount = 0;
+	unsigned int notFilled = 0;
         try {
 	  cout << "before aaron" << endl;
 	  plant->getShipment( stock );
@@ -46,31 +45,43 @@ void Truck::main(){
 	  }
 	  print->print(Printer::Truck,'P',shipcount);
         } catch ( BottlingPlant::Shutdown e ) {
-	  cout<<"bott catchhhhhhhhh"<<endl;
 	  print->print(Printer::Truck,'F');
+	  cout << "get here" << endl;
+	  _Accept(Truck::~Truck);
 	  return;
-        }
-	cout << "numVending " << numVendingMachines << endl;
+        } catch ( ... ) {
+	  print->print(Printer::Truck,'F');
+	  cout << "get here2" << endl;
+	  _Accept(Truck::~Truck);
+	  return;
+	}
+
         for( unsigned int i = 0; i < numVendingMachines; i++ ) {
-	  cout << "aaron you are my girl" << endl;
+	  if( shipcount == 0 ) {
+	    break;
+	  }
 	  unsigned int id = list[i]->getId();
+	  cout << "before inventory" << endl; 
 	  unsigned int *inventory = list[i]->inventory();
-	  cout << "is it here aaron" << endl;
-	  print->print(Printer::Vending, 'd', id, shipcount); 
+	  cout << "after inventory" << endl;
+	  print->print(Printer::Truck, 'd', id, shipcount); 
 	  for( int j = 0; j < 4; j++ ) {
 	    unsigned int fill = maxStockPerFlavour - inventory[j]; 
+	    if ( stock[j] < fill ) {
+	      fill = stock[j];
+	    }
 	    inventory[j]+= fill;
 	    stock[j]-=fill;
 	    shipcount-=fill;
-	    notFilled = notFilled + (stock[j] - fill);
+	    notFilled = notFilled + (maxStockPerFlavour - inventory[j]);
 	  }
-	  print->print(Printer::Vending, 'U', id, notFilled);
+	  if ( notFilled > 0 ) {
+	    print->print(Printer::Truck, 'U', id, notFilled);
+	  } else {
+	    print->print(Printer::Truck,'D', id, shipcount);
+	  }
 	  list[i]->restocked();
-	  cout << "or here aaron??" << endl;
-	  print->print(Printer::Truck,'D', id, shipcount);
-	  cout << "where the fuck is aaron" << endl;
         }
-	cout<< "is aaron here" << endl;
     }
     
 }

@@ -29,7 +29,6 @@ void Student::main(){
   WATCard* fcard = NULL;
   //a student terminates after purchasing all the soda initally selected
   for (unsigned int i=0;i<myBottlesCount;i++){
-    std::cout<<"sit:"<<i<<std::endl;
     //before each attempt to buy a soda, a student yield a random number of times [1,10]
     yield(rand_gen(1,10));
     
@@ -41,7 +40,6 @@ void Student::main(){
     while(repeat){//for some reason i did not get my drink
       try{
 	fcard=mycard();
-	std::cout<<fcard->getBalance()<<std::endl;
 	mymachine->buy(myFlavour,*fcard);
 	//if no exception
 	prt.print(Printer::Student,id,'B',mymachine->getId());
@@ -55,16 +53,11 @@ void Student::main(){
       }
       //if vending machine indicates insufficient fund, student transfercurrent soda cost plus $5
       catch(VendingMachine::Funds e){
-	std::cout << "funds" << std::endl;
 	unsigned int amount=5+(mymachine->cost());
-	std::cout << "before: " << fcard->getBalance() << std::endl;
 	mycard=cardOffice.transfer(id,amount,fcard);
-	//mycard();
-	std::cout << "after: " << fcard->getBalance() << std::endl;
       }
       //if the vending machine is out of flavour, the student obtain a new vending machine
       catch(VendingMachine::Stock e){
-	std::cout << "stocks" << std::endl;
 	mymachine=nameServer.getMachine(id);
 	prt.print(Printer::Student,id,'V',mymachine->getId());
       }

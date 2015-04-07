@@ -25,12 +25,12 @@ void VendingMachine::main(){
     print->print(Printer::Vending, id, 'S', sodaCost);
     nameServer->VMregister( this );    
     for(;;){
-        _Accept( ~VendingMachine ){
+      _Accept( VendingMachine::~VendingMachine ){
             print->print(Printer::Vending, id, 'F');
-            break;
-        } or _When(noBuy) _Accept( restocked ){
+            return;
+        } or _When(noBuy) _Accept( VendingMachine::restocked ){
 
-        } or _When(!noBuy) _Accept(VendingMachine::buy, VendingMachine::inventory ){
+        } or _When(!noBuy) _Accept( VendingMachine::inventory, VendingMachine::buy ){
         
         }
     }
