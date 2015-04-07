@@ -28,31 +28,46 @@ void uMain::main(){
   ConfigParms myparms;
   
   //prepare 
-  processConfigFile(target,myparms);
-  //cout<<myparms.maxStockPerFlavour<<endl;
-  
+  processConfigFile(target, myparms);
   int seed=time(NULL);
   rand_gen.seed(seed);
   
   Printer myprinter(myparms.numStudents,myparms.numVendingMachines,myparms.numCouriers);
   Bank mybank(myparms.numStudents);
-  Parent* myparent=new Parent(myprinter,mybank,myparms.numStudents,myparms.parentalDelay);
-  WATCardOffice* myoffice=new WATCardOffice(myprinter,mybank,myparms.numCouriers);
-  NameServer* mynameserver=new NameServer(myprinter,myparms.numVendingMachines,myparms.numStudents);
-  
-  BottlingPlant* mybottlingplant=new BottlingPlant(myprinter,*mynameserver,myparms.numVendingMachines,myparms.maxShippedPerFlavour,myparms.maxStockPerFlavour,myparms.timeBetweenShipments);
+  Parent myparent(myprinter,mybank,myparms.numStudents,myparms.parentalDelay);
+  WATCardOffice myoffice(myprinter,mybank,myparms.numCouriers);
+  NameServer mynameserver(myprinter,myparms.numVendingMachines,myparms.numStudents);
+  BottlingPlant mybottlingplant(myprinter,mynameserver,myparms.numVendingMachines,myparms.maxShippedPerFlavour,myparms.maxStockPerFlavour,myparms.timeBetweenShipments);
+  Truck mytruck(myprinter, mynameserver,mybottlingplant,myparms.numVendingMachines,myparms.maxStockPerFlavour);
   
   VendingMachine* mymachines[myparms.numVendingMachines];
+  
+  Student* mystudents[myparms.numStudents];
+  
   for(unsigned int i=0;i<myparms.numVendingMachines;i++){
-    mymachines[i]=new VendingMachine(myprinter,*mynameserver,i,myparms.sodaCost,myparms.maxStockPerFlavour);
+    mymachines[i]=new VendingMachine(myprinter,mynameserver,i,myparms.sodaCost,myparms.maxStockPerFlavour);
   }
   
-  //clean up
-  delete mybottlingplant;
-  for (unsigned int i=0;i<myparms.numVendingMachines;i++){
+  for(unsigned int i=0;i<myparms.numStudents;i++){
+    mystudents[i]=new Student(myprinter,mynameserver,myoffice,i,myparms.maxPurchases);
+  }
+  
+  for (unsigned int i=0;i<5000000;i++){
+    unsigned int j=i*j;
+  }
+  
+  //delete card;
+
+  //BottlingPlant* mybottlingplant=new BottlingPlant(myprinter,*mynameserver,myparms.numVendingMachines,myparms.maxShippedPerFlavour,myparms.maxStockPerFlavour,myparms.timeBetweenShipments);
+  
+  for(unsigned int i=0;i<myparms.numStudents;i++){
+    delete mystudents[i];
+  }
+  cout<<"stud delete"<<endl;
+  
+  for(unsigned int i=0;i<myparms.numVendingMachines;i++){
     delete mymachines[i];
   }
-  delete mynameserver;
-  delete myoffice;
-  delete myparent;
+  cout<<"machin de"<<endl;
+  
 }

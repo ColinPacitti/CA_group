@@ -65,8 +65,8 @@ void BottlingPlant::main(){
     _Accept(~BottlingPlant){
       shutdown=true;
       //uRendezvousAcceptor();
-      uBaseCoroutine* URendezvousAcceptor();
       _Accept(getShipment);
+      break;
     }
     or _Accept(getShipment){
       yield(timeBetweenShipments);

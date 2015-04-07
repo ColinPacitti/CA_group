@@ -4,16 +4,16 @@
 #include "printer.h"
 #include "watcard.h"
 //#include "config.h"
-
+#include <iostream>
 using namespace std;
 
 VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost,
                                 unsigned int maxStockPerFlavour ){
-    print = &prt;
+    this->print = &prt;
     this->nameServer = &nameServer;
-    id = id;
-    sodaCost = sodaCost;
-    maxStockPerFlavour = maxStockPerFlavour;
+    this->id = id;
+    this->sodaCost = sodaCost;
+    this->maxStockPerFlavour = maxStockPerFlavour;
     noBuy = false;
     for( int i = 0; i < 2; i++ ) {
         stocks[i] = 0;
@@ -38,17 +38,18 @@ void VendingMachine::main(){
 
 void VendingMachine::buy( Flavours flavour, WATCard &card ){
     unsigned int balance = card.getBalance();
-    unsigned int *allStock = inventory();
-    unsigned int stock = allStock[flavour];    
-    print->print(Printer::Vending, 'B', (int)flavour, allStock[flavour] - (unsigned int)1);
+    unsigned int stock = stocks[flavour];
     //Need Flag variable according to assingment??
     //Check to make sure stock and balance is okay
+    uRendezvousAcceptor();
     if( balance < sodaCost ) {
-        throw Funds();
+      throw VendingMachine::Funds();
     } else if( stock == 0 ) {
-        throw Stock();
+      throw VendingMachine::Stock();
     } else {
-        card.withdraw( sodaCost );
+      print->print(Printer::Vending, 'B', (int)flavour, stocks[flavour] - (unsigned int)1);
+      stocks[flavour]--;
+      card.withdraw( sodaCost );
     } 
 }
 

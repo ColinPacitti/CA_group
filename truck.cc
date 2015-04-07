@@ -39,7 +39,6 @@ void Truck::main(){
 	        }
 	        print->print(Printer::Truck,'P',shipcount);
         } catch ( BottlingPlant::Shutdown e ) {
-	  cout<<"adsfadsfa"<<endl;
 	  print->print(Printer::Truck,'F');
 	  return;
         }

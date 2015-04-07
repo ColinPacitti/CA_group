@@ -1,4 +1,5 @@
 #include "bank.h"
+#include <iostream>
 using namespace std;
 
 Bank::Bank( unsigned int numStudents ) {
@@ -13,13 +14,14 @@ Bank::~Bank(){
 }
 
 void Bank::deposit( unsigned int id, unsigned int amount ) {
-    balances.at(id)+= amount;
-    waitCond[id].signal();
+  balances[id]+=amount;
+  waitCond[id].signal();
 }
 
 void Bank::withdraw( unsigned int id, unsigned int amount ) {
     while( amount > balances.at(id) ) {
        waitCond[id].wait();
     }
-    balances.at(id)-=amount;
+    //balances.at(id)-=amount;
+    balances[id]-=amount;
 }

@@ -3,7 +3,7 @@
 //#include "watcard.h"
 #include "bank.h"
 #include "printer.h"
-
+#include <iostream>
 using namespace std;
 
 extern MPRNG rand_gen;//!!! TODO: declare on driver
@@ -24,7 +24,9 @@ WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount){
   //a student performs an asychronous call to create to create real WATCard with balance
   //COURIER: a future WATCard is returned and sufficient funds are subsequently obtained from bank
   //via a courier to satisfy the request
-  Job* myjob=new Job(Args(sid,amount,NULL,bank));
+  WATCard* mywatcard=new WATCard();
+  
+  Job* myjob=new Job(Args(sid,amount,mywatcard,bank));
   requests.push_back(myjob);
   //waitChan.signalBlock();//??? question, is this right, down there is same one
   prt.print(Printer::WATCardOffice,'C',sid,amount);
@@ -65,10 +67,10 @@ void WATCardOffice::main(){
       for(unsigned int i=0;i<numCouriers;i++){
 	_Accept(requestWork);
       }
-      
+      break;
     }
-    or _When(requests.size()==0) _Accept(create,transfer);
-    or _When(requests.size()>0) _Accept(requestWork);
+    or _When(requests.size() == 0) _Accept(create,transfer);
+    or _When(requests.size() > 0) _Accept(requestWork);
   }
 }
 
