@@ -1,131 +1,201 @@
 #include "printer.h"
 #include <iostream>
-
-const unsigned int SUM_OF_SINGLE_KINDS = 5;
-const int NO_VALUE = -1;
-
+#include <vector>
 using namespace std;
 
-// Ctor, initialises member fields and prints header
-Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers ) :
-  students(numStudents), machines(numVendingMachines), couriers(numCouriers) {
-  total_size = SUM_OF_SINGLE_KINDS + students + machines + couriers;
-  entries = new Entry [total_size];
-
-  // Print header
-  cout << "Parent\tWATOff\tNames\tTruck\tPlant\t";
-  for (unsigned int i = 0; i < students; i++) {
-    cout << "Stud" << i << '\t';
+Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines,unsigned int numCouriers)
+  :numStudents(numStudents),numVendingMachines(numVendingMachines),numCouriers(numCouriers)
+{
+  cout<<"Parent";
+  cout<<"\t";
+  cout<<"WATOff";
+  cout<<"\t";
+  cout<<"Names";
+  cout<<"\t";
+  cout<<"Truck";
+  cout<<"\t";
+  cout<<"Plant";
+  cout<<"\t";
+  
+  for(int i=0;i<5;i++){
+    storages.push_back(storage('0',(unsigned int)0,(unsigned int)0,false));
   }
-  for (unsigned int i = 0; i < machines; i++) {
-    cout << "Mach" << i << '\t';
+  
+  for(unsigned int i=0;i<numStudents;i++){
+    cout<<"Stud"<<i<<"\t";
+    storages.push_back(storage('0',(unsigned int)0,(unsigned int)0,false));
   }
-  for (unsigned int i = 0; i < couriers; i++) {
-    cout << "Cour" << i << '\t';
+  
+  for (unsigned int i=0;i<numVendingMachines;i++){
+    cout<<"Mach"<<i<<"\t";
+    storages.push_back(storage('0',(unsigned int)0,(unsigned int)0,false));
   }
-  cout << endl;
-  for (unsigned int i = 0; i < total_size; i++) {
-    cout << "=======" << '\t';
+  
+  for (unsigned int i=0;i<numCouriers;i++){
+    cout<<"Cour"<<i<<"\t";
+    storages.push_back(storage('0',(unsigned int)0,(unsigned int)0,false));
   }
-  cout << endl;
-
-  // Initialise entries
-  for (unsigned int i = 0; i < total_size; i++) {
-    entries[i].filled = false;
+  cout<<endl;
+  
+  totalCount=5+numStudents+numVendingMachines+numCouriers;
+  for (unsigned int i=0;i<totalCount;i++){
+    cout<<"*******"<<"\t";
   }
+  
+  cout<<endl;
 }
 
-// Print footer, free memory
-Printer::~Printer () {
-  cout << "***********************" << endl;
-  delete [] entries;
-}
 
-_Mutex void Printer::print( unsigned int id, char state, int value1, int value2) {
-  if (state == 'F') {
-      // check if we need to flush beforehand
-      for (unsigned int i = 0; i < total_size; i++) {
-          if (entries[id].filled) {
-            flush();
-            break;
-          }
+//print all blocks, and reset values
+void Printer::flush(){
+  bool haveData=false;
+  //check if any data there
+  for (unsigned int i=0;i<totalCount;i++){
+    if(storages[i].flag) haveData=true;
+  }
+  if(!haveData) return;
+  
+  for(unsigned int i=0;i<totalCount;i++){
+    if(storages[i].flag){//only print if there is data
+      storages[i].flag=false;
+      cout<<storages[i].state;
+      if(storages[i].value1==NULL){
+	cout<<"\t";
+	continue;
       }
-
-      // print the finished state
-      for (unsigned int i = 0; i < total_size; i++) {
-        if (id != i)
-            cout << "...";
-        else
-            cout << state;
-        cout << "\t";
+      cout<<storages[i].value1;
+      if(storages[i].value2==NULL){
+	cout<<"\t";
+	continue;
       }
-      cout << endl;
-  } else if (entries[id].filled) {
-      flush();
-  }
-
-  if (state != 'F') {
-    entries[id].state  = state;
-    entries[id].value1 = value1;
-    entries[id].value2 = value2;
-    entries[id].filled = true;
-  }
-}
-
-void Printer::print( Kind kind, char state ) {
-  print(kind, state, NO_VALUE, NO_VALUE);
-}
-
-void Printer::print( Kind kind, char state, int value1 ) {
-  print(kind, state, value1, NO_VALUE);
-}
-
-void Printer::print( Kind kind, char state, int value1, int value2 ) {
-  print(kind, 0, state, value1, value2);
-}
-
-void Printer::print( Kind kind, unsigned int lid, char state ) {
-  print(kind, lid, state, NO_VALUE, NO_VALUE);
-}
-
-void Printer::print( Kind kind, unsigned int lid, char state, int value1 ) {
-  print(kind, lid, state, value1, NO_VALUE);
-}
-
-void Printer::print( Kind kind, unsigned int lid, char state, int value1, int value2 ) {
-  int offset = 0;
-  switch (kind) {
-    case Student:
-      offset = SUM_OF_SINGLE_KINDS;
-      break;
-    case Vending:
-      offset = SUM_OF_SINGLE_KINDS + students;
-      break;
-    case Courier:
-      offset = SUM_OF_SINGLE_KINDS + students + machines;
-      break;
-    default:
-      offset = (unsigned int) kind;
-      break;
-  }
-
-  print(offset + lid, state, value1, value2);
-}
-
-// Flush buffered data to console output
-void Printer::flush () {
-  for (unsigned int i = 0; i < total_size; i++) {
-    if (entries[i].filled) {
-      cout << entries[i].state;
-      if (entries[i].value1 != NO_VALUE) {
-        cout << entries[i].value1;
-        if (entries[i].value2 != NO_VALUE) {
-          cout << ',' << entries[i].value2;
-        }
-      }
-      entries[i].filled = false;
+      cout<<','<<storages[i].value2;
+      //cout<<"\t";
     }
-    cout << "\t";
+    cout<<"\t";
   }
-  cout << endl;
+  cout<<endl;
 }
+
+//just reset all blocks, so clear a line
+void Printer::reset(){
+  for(int i=0;i<totalCount;i++){
+    storages[i].flag=false;
+  }
+}
+
+_Mutex void Printer::helper( unsigned int index, char state, unsigned int value1, unsigned int value2) {
+  //check if state is F first
+  //if it is, just print it.
+  if(state=='F'){
+    flush();
+    for(unsigned int i=0;i<totalCount;i++){
+      if(index==i){
+	cout<<"F"<<"\t";
+      }
+      else{
+	cout<<"..."<<"\t";
+      }
+    }
+    cout<<endl;
+    return;
+  }
+  
+  if(storages[index].flag){//flush and store information
+    flush();
+  }
+
+  storages[index]=(storage(state,value1,value2,true));
+}
+
+void Printer::debug(){
+  cout<<"ddddebug"<<endl;
+  for (int i=0;i<storages.size();i++){
+    cout<<storages[i].state<<" "<<storages[i].value1<<" "<<storages[i].value2<<storages[i].flag<<endl;
+  }
+}
+
+void Printer::print(Kind kind,char state){
+  unsigned int myindex=getindex(kind,0);
+  //debug();
+  helper(myindex,state,NULL,NULL);
+}
+
+void Printer::print( Kind kind, char state, int value1 ){
+  helper(getindex(kind,0),state,value1,NULL);
+}
+
+void Printer::print( Kind kind, char state, int value1, int value2 ){
+  helper(getindex(kind,0),state,value1,value2);
+}
+
+void Printer::print( Kind kind, unsigned int lid, char state ){
+  helper(getindex(kind,lid),state,NULL,NULL);
+}
+
+void Printer::print( Kind kind, unsigned int lid, char state, int value1 ){
+  helper(getindex(kind,lid),state,value1,NULL);
+}
+
+void Printer::print( Kind kind, unsigned int lid, char state, int value1, int value2 ){
+  //cout<<"vvv::"<<value1<<" "<<value2<<endl;
+  helper(getindex(kind,lid),state,value1,value2);
+}
+
+Printer::~Printer(){
+  cout<<"***********************"<<endl;
+}
+
+unsigned int Printer::getindex(Kind kind,unsigned int index){
+  //unsigned int value;
+  // WATCardOffice, NameServer, Truck, BottlingPlant,
+  //Student, Vending, Courier
+  switch(kind){
+  case Parent:
+    return 0;
+    break;
+  case WATCardOffice:
+    return 1;
+    break;
+  case NameServer:
+    return 2;
+    break;
+  case Truck:
+    return 3;
+    break;
+  case BottlingPlant:
+    return 4;
+    break;
+  case Student:
+    return 5+index;
+    break;
+  case Vending:
+    return 5+numStudents+index;
+    break;
+  case Courier:
+    //default:
+    return 5+numStudents+numVendingMachines+index;
+    break;
+  }
+  return 0;
+}
+
+/*
+
+void uMain::main(){
+  Printer p (3,3,3);
+  p.print(Printer::Parent,'F');
+  //p.print(Printer::Truck,'d',14,15);
+  //p.print(Printer::Courier,2,'c');
+  //p.print(Printer::Courier,2,'c',12,23);
+  //p.print(Printer::Courier,'c',2);
+  //p.print(Printer::Courier,'c',2);
+
+  p.print(Printer::WATCardOffice,'S');
+  p.print(Printer::NameServer,'S');
+  p.print(Printer::Truck,'S');
+  p.print(Printer::BottlingPlant,'S');
+  p.print(Printer::BottlingPlant,'S');
+  
+  p.print(Printer::Parent,'F');
+}
+*/
