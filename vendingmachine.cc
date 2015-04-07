@@ -22,11 +22,11 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
 }
 
 void VendingMachine::main(){
-    print->print(Printer::Vending, 'S', sodaCost);
+    print->print(Printer::Vending, id, 'S', sodaCost);
     nameServer->VMregister( this );    
     for(;;){
         _Accept( ~VendingMachine ){
-            print->print(Printer::Vending, 'F');
+            print->print(Printer::Vending, id, 'F');
             break;
         } or _When(noBuy) _Accept( restocked ){
 
@@ -47,7 +47,7 @@ void VendingMachine::buy( Flavours flavour, WATCard &card ){
     } else if( stock == 0 ) {
       throw VendingMachine::Stock();
     } else {
-      print->print(Printer::Vending, 'B', (int)flavour, stocks[flavour] - (unsigned int)1);
+      print->print(Printer::Vending, id, 'B', (int)flavour, stocks[flavour] - (unsigned int)1);
       stocks[flavour]--;
       card.withdraw( sodaCost );
     } 
@@ -55,13 +55,13 @@ void VendingMachine::buy( Flavours flavour, WATCard &card ){
 
 unsigned int* VendingMachine::inventory(){
     noBuy = true;
-    print->print(Printer::Vending, 'r');
+    print->print(Printer::Vending, id, 'r');
     return stocks; 
 }
 
 void VendingMachine::restocked(){
     noBuy = false;
-    print->print(Printer::Vending, 'R');
+    print->print(Printer::Vending, id, 'R');
 }
 
 unsigned int VendingMachine::cost() {
