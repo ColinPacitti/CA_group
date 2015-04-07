@@ -14,11 +14,15 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
     this->id = id;
     this->sodaCost = sodaCost;
     this->maxStockPerFlavour = maxStockPerFlavour;
+    exe = -1;
     noBuy = false;
     for( int i = 0; i < 2; i++ ) {
         stocks[i] = 0;
     }
     //Register with nameServer
+}
+
+VendingMachine::~VendingMachine(){
 }
 
 void VendingMachine::main(){
@@ -27,41 +31,51 @@ void VendingMachine::main(){
     for(;;){
       _Accept( VendingMachine::~VendingMachine ){
             print->print(Printer::Vending, id, 'F');
+            if(noBuy) {
+                _Accept(VendingMachine::restocked);
+            }
             return;
         } or _When(noBuy) _Accept( VendingMachine::restocked ){
-
-        } or _When(!noBuy) _Accept( VendingMachine::inventory, VendingMachine::buy ){
-        
+            noBuy = false;
+            print->print(Printer::Vending, id, 'R');
+        } or _When(!noBuy) _Accept( VendingMachine::inventory){
+            noBuy = true;
+            print->print(Printer::Vending, id, 'r');
+        } or _When(!noBuy) _Accept( VendingMachine::buy ){
+            exe = -1;
+            unsigned int balance = card->getBalance();
+            unsigned int stock = stocks[flav];
+            //uRendezvousAcceptor();
+            if( balance < sodaCost ) {
+                exe = 1;
+            } else if( stock == 0 ) {
+                exe = 0;
+            } else {
+                print->print(Printer::Vending, id, 'B', (int)flav, stocks[flav] - (unsigned int)1);
+                stocks[flav]-=1;
+                card->withdraw( sodaCost );
+            }
+            buyWait.signalBlock();    
         }
     }
 }
 
 void VendingMachine::buy( Flavours flavour, WATCard &card ){
-    unsigned int balance = card.getBalance();
-    unsigned int stock = stocks[flavour];
-    //Need Flag variable according to assingment??
-    //Check to make sure stock and balance is okay
-    uRendezvousAcceptor();
-    if( balance < sodaCost ) {
-      throw VendingMachine::Funds();
-    } else if( stock == 0 ) {
-      throw VendingMachine::Stock();
-    } else {
-      print->print(Printer::Vending, id, 'B', (int)flavour, stocks[flavour] - (unsigned int)1);
-      stocks[flavour]--;
-      card.withdraw( sodaCost );
-    } 
+    flav = flavour;
+    this->card = &card;
+    buyWait.wait();
+    if( exe == 1 ) {
+        throw VendingMachine::Funds();
+    } else if( exe == 0) {
+        throw VendingMachine::Stock();
+    }
 }
 
 unsigned int* VendingMachine::inventory(){
-    noBuy = true;
-    print->print(Printer::Vending, id, 'r');
     return stocks; 
 }
 
 void VendingMachine::restocked(){
-    noBuy = false;
-    print->print(Printer::Vending, id, 'R');
 }
 
 unsigned int VendingMachine::cost() {

@@ -22,13 +22,12 @@ BottlingPlant::BottlingPlant(Printer &prt,NameServer &nameServer,unsigned int nu
 void BottlingPlant::getShipment(unsigned int cargo[]){
   //the truck calls getShipment to obtain a shipment from the plant
   //and the shipment is copied into the cargo array passed by the truck
+    totalcount = 0;
   if(shutdown){
      uRendezvousAcceptor();
-     cout << "isi it even getting thrown!?" << endl;
     throw BottlingPlant::Shutdown();
   }
   
-  prt.print(Printer::BottlingPlant,'P');
   
   //production run
   //??? consequence to move it here
@@ -43,12 +42,11 @@ void BottlingPlant::getShipment(unsigned int cargo[]){
   //ready to ship
   for(unsigned int i=0;i<4;i++){
     cargo[i]=stock[i];
-    //cargo[i]=0;
   }
+  prt.print(Printer::BottlingPlant,'P');
 }
 
 BottlingPlant::~BottlingPlant(){
-  //cout<<"bottlingplant del"<<endl;
 }
 
 void BottlingPlant::main(){
@@ -57,33 +55,19 @@ void BottlingPlant::main(){
   prt.print(Printer::BottlingPlant,'S');
   mytruck=new Truck(prt,nameServer,*this,numVendingMachines,maxStockPerFlavour);
   
-  /*
-  for(unsigned int i=0;i<maxShippedPerFlavour;i++){
-    unsigned int mynumber=(rand_gen(maxShippedPerFlavour));
-    stock[i]=mynumber;
-    totalcount+=mynumber;
-  }
-  */
   
   while(true){
     //and waiting for the truck to pickup the production run
     _Accept(BottlingPlant::~BottlingPlant){
-      cout << "does this happen!???" << endl;
       shutdown=true;
       _Accept(BottlingPlant::getShipment);
-      break;
+        delete mytruck;
+         prt.print(Printer::BottlingPlant,'F');
+      return;
     }
     or _Accept(BottlingPlant::getShipment){
       yield(timeBetweenShipments);
-      /*
-      for(unsigned int i=0;i<maxShippedPerFlavour;i++){
-	unsigned int mynumber=(rand_gen(maxShippedPerFlavour));
-	stock[i]=mynumber;
-	totalcount+=mynumber;
-      }
-      */
+
     }
   }
-  delete mytruck;
-  prt.print(Printer::BottlingPlant,'F');
 }

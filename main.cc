@@ -51,18 +51,11 @@ void uMain::main(){
     mystudents[i]=new Student(myprinter,mynameserver,myoffice,i,myparms.maxPurchases);
   }
   
-  for (unsigned int i=0;i<5000000;i++){
-    unsigned int j=i*j;
-  }
-  
   for(unsigned int i=0;i<myparms.numStudents;i++){
     delete mystudents[i];
   }
-  cout<<"stud delete"<<endl;
   
   for(unsigned int i=0;i<myparms.numVendingMachines;i++){
     delete mymachines[i];
   }
-  cout<<"machin de"<<endl;
-  
 }
