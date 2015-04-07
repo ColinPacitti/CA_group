@@ -24,7 +24,8 @@ void BottlingPlant::getShipment(unsigned int cargo[]){
   //and the shipment is copied into the cargo array passed by the truck
   cout<<"getship:"<<shutdown<<endl;
   if(shutdown){
-    throw Shutdown();
+     uRendezvousAcceptor();
+    throw BottlingPlant::Shutdown();
   }
   
   prt.print(Printer::BottlingPlant,'P');
@@ -46,6 +47,10 @@ void BottlingPlant::getShipment(unsigned int cargo[]){
   }
 }
 
+BottlingPlant::~BottlingPlant(){
+  cout<<"bottlingplant del"<<endl;
+}
+
 void BottlingPlant::main(){
   //it begines by creating a truck, performing a production run
   //MaxShippedPerFlavour is the maximum number of bottles of each flavour generated during production
@@ -62,13 +67,14 @@ void BottlingPlant::main(){
   
   while(true){
     //and waiting for the truck to pickup the production run
-    _Accept(~BottlingPlant){
+    _Accept(BottlingPlant::~BottlingPlant){
+      cout<<"booooooooo"<<endl;
       shutdown=true;
-      //uRendezvousAcceptor();
-      _Accept(getShipment);
+      _Accept(BottlingPlant::getShipment);
+      cout<<"lllllloooooo"<<endl;
       break;
     }
-    or _Accept(getShipment){
+    or _Accept(BottlingPlant::getShipment){
       yield(timeBetweenShipments);
       /*
       for(unsigned int i=0;i<maxShippedPerFlavour;i++){
@@ -79,5 +85,6 @@ void BottlingPlant::main(){
       */
     }
   }
+  delete mytruck;
   prt.print(Printer::BottlingPlant,'F');
 }

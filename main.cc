@@ -38,7 +38,6 @@ void uMain::main(){
   WATCardOffice myoffice(myprinter,mybank,myparms.numCouriers);
   NameServer mynameserver(myprinter,myparms.numVendingMachines,myparms.numStudents);
   BottlingPlant mybottlingplant(myprinter,mynameserver,myparms.numVendingMachines,myparms.maxShippedPerFlavour,myparms.maxStockPerFlavour,myparms.timeBetweenShipments);
-  Truck mytruck(myprinter, mynameserver,mybottlingplant,myparms.numVendingMachines,myparms.maxStockPerFlavour);
   
   VendingMachine* mymachines[myparms.numVendingMachines];
   
@@ -55,10 +54,6 @@ void uMain::main(){
   for (unsigned int i=0;i<5000000;i++){
     unsigned int j=i*j;
   }
-  
-  //delete card;
-
-  //BottlingPlant* mybottlingplant=new BottlingPlant(myprinter,*mynameserver,myparms.numVendingMachines,myparms.maxShippedPerFlavour,myparms.maxStockPerFlavour,myparms.timeBetweenShipments);
   
   for(unsigned int i=0;i<myparms.numStudents;i++){
     delete mystudents[i];
