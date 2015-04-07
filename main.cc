@@ -17,9 +17,14 @@ using namespace std;
 MPRNG rand_gen;
 
 void uMain::main(){
-  
-  //prepare target
-  string passin="test.config";
+  string passin;
+   try {
+    passin = argv[1];  
+  } catch ( ... ) {
+    cout << "./soda [config filename]" << endl;
+  }
+    //prepare target
+  //string passin="test.config";
   //char* target=new char[passin.size()+1];
   //target[passin.size()]=NULL;//null terminate
   //copy(passin.begin(),passin.end(),target);
